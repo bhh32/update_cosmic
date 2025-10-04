@@ -3,7 +3,7 @@
 UPDATE_REPO=${HOME}/Documents/contribs/cosmic_weekly/aerynos-recipes
 COSMIC_SRC=/tmp/cosmic_src
 
-mkdir -p $COSMIC_SRC
+sudo mkdir -p $COSMIC_SRC
 
 base_dir="${UPDATE_REPO}/c"
 x_base_dir="${UPDATE_REPO}/x/xdg-desktop-portal-cosmic"
@@ -43,7 +43,7 @@ for pkg in *; do
 
         cd "${COSMIC_SRC}"
 
-        git clone https://github.com/pop-os/${pkg}.git
+        sudo git clone https://github.com/pop-os/${pkg}.git
         cd $pkg
 
         if [[ "$pkg" == "cosmic-workspace-epoch" ]]; then
