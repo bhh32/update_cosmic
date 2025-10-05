@@ -3,7 +3,10 @@
 UPDATE_REPO=${HOME}/Documents/contribs/cosmic_weekly/aerynos-recipes
 COSMIC_SRC=/tmp/cosmic_src
 
-sudo mkdir -p $COSMIC_SRC
+# Give temporary user access to /tmp
+sudo chown $USER:root /tmp
+
+mkdir -p $COSMIC_SRC
 
 base_dir="${UPDATE_REPO}/c"
 x_base_dir="${UPDATE_REPO}/x/xdg-desktop-portal-cosmic"
@@ -24,9 +27,9 @@ touch ../$success_lst
 
 # Ensure the branch is unique to the week it's being updated
 # Uncomment this for the first run of the week, comment it back out after the first run.
-git checkout 2025-05-repo-rebuild
-git pull -r https://github.com/aerynos/recipes.git 2025-05-repo-rebuild
-git push -f
+#git checkout 2025-05-repo-rebuild
+#git pull -r https://github.com/aerynos/recipes.git 2025-05-repo-rebuild
+#git push -f
 git checkout -b $(date -I date)-cosmic-update
 
 for pkg in *; do
@@ -43,7 +46,7 @@ for pkg in *; do
 
         cd "${COSMIC_SRC}"
 
-        sudo git clone https://github.com/pop-os/${pkg}.git
+        git clone https://github.com/pop-os/${pkg}.git
         cd $pkg
 
         if [[ "$pkg" == "cosmic-workspace-epoch" ]]; then
@@ -72,7 +75,7 @@ for pkg in *; do
         version=$(cat stone.yaml | grep version | awk '{ print $3 }')
         echo "Updated version: ${version}"
         if [[ "$?" == "0" ]]; then
-          boulder build --profile local
+          boulder build --profile local-x86_64
 
           if [[ "$?" == "0" ]]; then
             just mv-local
@@ -125,7 +128,7 @@ if [[ "${update_hash}" != "${cur_hash}" ]]; then
   echo "Updated version: ${version}"
 
   if [[ "$?" == "0" ]]; then
-    boulder build --profile local
+    boulder build --profile local-x86_64
 
     if [[ "$?" == "0" ]]; then
       just mv-local
@@ -146,4 +149,9 @@ if [[ "${update_hash}" != "${cur_hash}" ]]; then
     echo "$pkg failed to update" >> ../$failure_lst
   fi
 fi
+
+# Return /tmp ownership to root
+sudo chown root:root /tmp
+
+# Return to the directory that the script was ran from
 cd $cwd
