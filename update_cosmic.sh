@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
 UPDATE_REPO=${HOME}/Documents/contribs/cosmic_weekly/aerynos-recipes
+LOG_DIR=${HOME}/Documents/contribs/cosmic_weekly/logs
 COSMIC_SRC=/tmp/cosmic_src
+
+if [ ! -d "$LOG_DIR" ]; then
+  mkdir -p $LOG_DIR
+fi
 
 # Give temporary user access to /tmp
 sudo chown $USER:root /tmp
@@ -17,13 +22,21 @@ cwd=$(pwd)
 
 cd $base_dir
 
+# Create LOG_DIR for this build
+if [ ! -d "${LOG_DIR}/$(date -I date)" ]; then
+  mkdir -p ${LOG_DIR}/$(date -I date)
+fi
+
+# Reset the LOG_DIR variable to the created date directory
+LOG_DIR=${LOG_DIR}/$(date -I date)
+
 # Create a failure list
 failure_lst="$(date -I date)-package-failures.lst"
-touch ../$failure_lst
+touch ${LOG_DIR}/$failure_lst
 
 # Create a success list
 success_lst="$(date -I date)-package-successes.lst"
-touch ../$success_lst
+touch ${LOG_DIR}/$success_lst
 
 # Ensure the branch is unique to the week it's being updated
 # Uncomment this for the first run of the week, comment it back out after the first run.
