@@ -84,7 +84,7 @@ for pkg in *; do
         echo "Updating: $pkg"
         version=$(cat stone.yaml | grep version | awk '{ print $3 }')
         echo "Current version: ${version}"
-        boulder recipe update --ver 1.0.0-beta.1.1+git."${update_hash:0:7}" --upstream "git|${update_hash}" stone.yaml -w
+        boulder recipe update --ver 1.0.0-beta2+git."${update_hash:0:7}" --upstream "git|${update_hash}" stone.yaml -w
         version=$(cat stone.yaml | grep version | awk '{ print $3 }')
         echo "Updated version: ${version}"
         if [[ "$?" == "0" ]]; then
@@ -136,7 +136,7 @@ if [[ "${update_hash}" != "${cur_hash}" ]]; then
   echo "Updating: xdg-desktop-portal-cosmic"
   version=$(cat stone.yaml | grep version | awk '{ print $3 }')
   echo "Current version: ${version}"
-  boulder recipe update --ver 1.0.0-beta.1+git."${update_hash:0:7}" --upstream "git|${update_hash}" stone.yaml -w
+  boulder recipe update --ver 1.0.0-beta2+git."${update_hash:0:7}" --upstream "git|${update_hash}" stone.yaml -w
   version=$(cat stone.yaml | grep version | awk '{ print $3 }')
   echo "Updated version: ${version}"
 
