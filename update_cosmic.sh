@@ -39,10 +39,10 @@ success_lst="$(date -I date)-package-successes.lst"
 touch ${LOG_DIR}/$success_lst
 
 # Ensure the branch is unique to the week it's being updated
-# Uncomment this for the first run of the week, comment it back out after the first run.
-#git checkout 2025-05-repo-rebuild
-#git pull -r https://github.com/aerynos/recipes.git 2025-05-repo-rebuild
-#git push -f
+# Comment this after the first run of the week, uncomment it after merge.
+git checkout 2025-05-repo-rebuild
+git pull -r https://github.com/aerynos/recipes.git 2025-05-repo-rebuild
+git push -f
 git checkout -b $(date -I date)-cosmic-update
 
 for pkg in *; do
