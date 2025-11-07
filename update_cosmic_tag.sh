@@ -3,6 +3,9 @@
 # Get maintainers repo
 read -p "Enter your AerynOS recipe fork's URL: " fork
 
+# Get the tag needed for the update
+read -p "Enter the tag name (i.e.; beta.5): " tag
+
 UPDATE_BASE=${HOME}/Documents/contribs/cosmic_weekly
 UPDATE_REPO="${UPDATE_BASE}/$(echo $fork | awk -F'/' '{ print $NF }')"
 LOG_DIR=${HOME}/Documents/contribs/cosmic_weekly/logs
@@ -73,7 +76,7 @@ for pkg in *; do
     fi
 
     # Get the beta tag commit
-    git checkout epoch-1.0.0-beta.4
+    git checkout epoch-1.0.0-${tag}
     beta_hash=$(git rev-parse HEAD)
 
     # Switch to the update repo
@@ -83,7 +86,7 @@ for pkg in *; do
       cd "${UPDATE_REPO}/x/$pkg"
     fi
 
-    version="1.0.0-beta.4.git+${beta_hash:0:7}"
+    version="1.0.0-${tag}.git+${beta_hash:0:7}"
     boulder recipe update --ver $version --upstream "git|${beta_hash}" stone.yaml -w  
 
     if [[ "$?" == "0" ]]; then
@@ -92,6 +95,7 @@ for pkg in *; do
       if [[ "$?" == "0" ]]; then
         just mv-local
         notify-send "Successful Build" "$pkg successfully built; please review"
+        echo "$pkg: $version" >> $success_log
       else
         notify-send "Failed Build" "$pkg failed to build; please review"
         echo "$pkg: $version" >> $failure_log
